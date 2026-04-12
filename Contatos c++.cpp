@@ -76,6 +76,8 @@ public:
 	}
 
 };
+
+
 class Contato
 {
 private:
@@ -195,7 +197,7 @@ int main(int argc, char** argv)
 	while(contact < 6)
 	{
 
-	
+
 		while (true)
 		{
 			bool temNumero = false;
@@ -209,7 +211,7 @@ int main(int argc, char** argv)
 			cout << "[ERRO] O nome nao pode conter numeros." << endl;
 		}
 
-	
+
 		while (true)
 		{
 			cout << "Digite o Email: ";
@@ -220,7 +222,7 @@ int main(int argc, char** argv)
 			cout << "[ERRO] Email invalido! Tente novamente." << endl;
 		}
 
-	
+
 		while (true)
 		{
 			cout << "Telefone (DDD + Numero): ";
@@ -238,36 +240,36 @@ int main(int argc, char** argv)
 			cout << "[ERRO] Digite 10 ou 11 numeros!" << endl;
 		}
 
-	
+
 		while(true)
 		{
-			char sep; 
+			char sep;
 			cout << "Digite a data de nascimento (DD/MM/AAAA): ";
 
 
 			if (cin >> x >> sep >> y >> sep >> z)
 			{
-	
+
 				if (z < 1900 || z > 2026)
 				{
 					cout << "[ERRO] Ano invalido!" << endl;
 					continue;
 				}
 
-			
+
 				if (y < 1 || y > 12)
 				{
 					cout << "[ERRO] Mes invalido!" << endl;
 					continue;
 				}
 
-	
+
 				int diasNoMes[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 				if ((z % 4 == 0 && z % 100 != 0) || (z % 400 == 0)) diasNoMes[1] = 29;
 
 				if (x >= 1 && x <= diasNoMes[y - 1])
 				{
-					break; 
+					break;
 				}
 				else
 				{
@@ -277,7 +279,7 @@ int main(int argc, char** argv)
 			else
 			{
 				cout << "[ERRO] Formato invalido! Use DD/MM/AAAA." << endl;
-				cin.clear(); 
+				cin.clear();
 				cin.ignore(1000, '\n');
 			}
 		}
