@@ -240,15 +240,30 @@ int main(int argc, char** argv)
 			cout << "[ERRO] Digite 10 ou 11 numeros!" << endl;
 		}
 
-
 		while(true)
 		{
-			char sep;
+			string entrada;
 			cout << "Digite a data de nascimento (DD/MM/AAAA): ";
+			cin >> entrada;
 
 
-			if (cin >> x >> sep >> y >> sep >> z)
+			if (entrada.find('/') == string::npos)
 			{
+				cout << "[ERRO] Use o formato DD/MM/AAAA!" << endl;
+				continue;
+			}
+
+			char sep1, sep2;
+
+			stringstream ss(entrada);
+
+			if (ss >> x >> sep1 >> y >> sep2 >> z)
+			{
+				if (sep1 != '/' || sep2 != '/')
+				{
+					cout << "[ERRO] Use o formato DD/MM/AAAA!" << endl;
+					continue;
+				}
 
 				if (z < 1900 || z > 2026)
 				{
@@ -256,34 +271,27 @@ int main(int argc, char** argv)
 					continue;
 				}
 
-
 				if (y < 1 || y > 12)
 				{
 					cout << "[ERRO] Mes invalido!" << endl;
 					continue;
 				}
 
-
 				int diasNoMes[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-				if ((z % 4 == 0 && z % 100 != 0) || (z % 400 == 0)) diasNoMes[1] = 29;
+
+				if ((z % 4 == 0 && z % 100 != 0) || (z % 400 == 0))
+					diasNoMes[1] = 29;
 
 				if (x >= 1 && x <= diasNoMes[y - 1])
-				{
 					break;
-				}
-				else
-				{
-					cout << "[ERRO] Dia invalido para o mes informado!" << endl;
-				}
+
+				cout << "[ERRO] Dia invalido para o mes informado!" << endl;
 			}
 			else
 			{
-				cout << "[ERRO] Formato invalido! Use DD/MM/AAAA." << endl;
-				cin.clear();
-				cin.ignore(1000, '\n');
+				cout << "[ERRO] Formato invalido!" << endl;
 			}
 		}
-
 
 
 		Contato c(email, nome, telefone , x, y, z);
