@@ -334,14 +334,14 @@ int main()
 		listaContatos.push_back(p);
 		pessoas++;
 
-		if(pessoas < 2)
+		if(pessoas < 5)
 		{
 			cout << "Digite 1 para adicionar um novo contato ou 0 para terminar" << endl;
 			cin >> Escolha;
 
 			cin.ignore(1000, '\n');
 
-			if(Escolha == 5)
+			if(Escolha == 0)
 			{
 				break;
 			}
