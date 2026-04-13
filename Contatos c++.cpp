@@ -4,6 +4,10 @@
 #include <windows.h>
 #include <locale.h>
 #include <cstdlib>
+#include <ctime>
+#include <cctype>
+
+
 
 using namespace std;
 
@@ -84,96 +88,107 @@ private:
 	string Email;
 	string Nome;
 	string Telefone;
-	Data DataNascimento;
+	int dia;
+	int mes;
+	int ano;
+	Data dtnasc;
 
-
-	string limpar(string num)
-	{
-		string r = "";
-		for (size_t i = 0; i < num.size(); i++)
-		{
-			if (isdigit(num[i])) r += num[i];
-		}
-		return r;
-	}
+	int idade;
 
 public:
-	Contato(string Email, string Nome, string Telefone, int dia, int mes, int ano)
-		: Email(Email), Nome(Nome), DataNascimento(dia, mes, ano)
+	void setNome(const string& n)
 	{
-		this->setTelefone(Telefone);
+		Nome = n;
 	}
 
-
-	void setEmail(string Email)
-	{
-		this->Email = Email;
-	}
-	string getEmail()
-	{
-		return Email;
-	}
-
-	void setNome(string Nome)
-	{
-		this->Nome = Nome;
-	}
 	string getNome()
 	{
 		return Nome;
 	}
 
-	void setTelefone(string numero)
+	void setEmail(const string& e)
 	{
-		string n = limpar(numero);
-		if (n.size() == 11)
-			Telefone = "(" + n.substr(0, 2) + ") " + n.substr(2, 5) + "-" + n.substr(7, 4);
-		else if (n.size() == 10)
-			Telefone = "(" + n.substr(0, 2) + ") " + n.substr(2, 4) + "-" + n.substr(6, 4);
-		else
-			Telefone = n;
+		Email = e;
 	}
+
+	string getEmail()
+	{
+		return Email;
+	}
+
+	void setTelefone(const string& t)
+	{
+		Telefone = t;
+	}
+
 	string getTelefone()
 	{
 		return Telefone;
 	}
 
-	void setDataNascimento(int dia, int mes, int ano)
+	void SetDataNascimento(int d, int m, int a)
 	{
-		DataNascimento.setDia(dia);
-		DataNascimento.setMes(mes);
-		DataNascimento.setAno(ano);
-	}
-	Data getDataNascimento() const
-	{
-		return DataNascimento;
+
+		dtnasc.setDia(d);
+		dtnasc.setMes(m);
+		dtnasc.setAno(a);
 	}
 
-	int calcularIdade(const Data& hoje)
+	string GetDataNascimento()
 	{
-		int idade = hoje.getAno() - DataNascimento.getAno();
-		if (hoje.getMes() < DataNascimento.getMes() ||
-				(hoje.getMes() == DataNascimento.getMes() && hoje.getDia() < DataNascimento.getDia()))
-		{
-			idade--;
-		}
-		return idade;
+		return dtnasc.getData();
 	}
 
-	void imprimir(const Data& hoje)
+	void CalcIdade(int ano)
+	{
+		idade = 2026 - ano;
+	}
+
+
+	void Imprimir()
 	{
 		cout << "Nome: " << Nome << endl;
 		cout << "Email: " << Email << endl;
-		cout << "Telefone: " << Telefone << endl;
-		cout << "Data de nascimento: " << DataNascimento.getData() << endl;
-		cout << "Idade: " << calcularIdade(hoje) << endl;
+
+		cout << "Telefone:(" << Telefone.substr(0, 2) << ")"
+			 << Telefone.substr(2, 5) << "-" << Telefone.substr(6, 4) << endl;
+
+		cout << "Data de Nascimento: " << dtnasc.getData() << endl;
+		cout << "Idade: " << idade << endl;
 	}
 };
 
-
-
-int main(int argc, char** argv)
+bool isValidEmail(string email)
 {
+
+	size_t atPos = email.find('@');
+
+	size_t dotPos = email.find_last_of('.');
+
+	if (atPos != string::npos && atPos > 0 &&
+			dotPos != string::npos && dotPos > atPos + 1 &&
+			dotPos < email.length() - 1)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool temNumeros(std::string nome)
+{
+	for (size_t i = 0; i < nome.length(); i++)
+	{
+		if (isdigit(static_cast<unsigned char>(nome[i])))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+int main()
+{
+
 
 	SetConsoleCP(CP_UTF8);
 	SetConsoleOutputCP(CP_UTF8);
@@ -184,140 +199,171 @@ int main(int argc, char** argv)
 	string email;
 	string telefone;
 
-	int contact = 0;
-	int escolha;
-
 	int x, y, z;
+
+	int pessoas = 1;
 
 	vector<Contato> listaContatos;
 
-
-	Data hoje(15, 8, 2026);
-
-	while(contact < 6)
+	while(pessoas <= 5)
 	{
+		int Escolha;
 
+		Contato p;
 
-		while (true)
+		while(true)
 		{
-			bool temNumero = false;
-			cout << "Digite o Nome: ";
-			getline(cin >> ws, nome);
-			for (size_t i = 0; i < nome.size(); i++)
+			cout << "Digite o Nome:";
+			cin >> nome;
+			
+			if(temNumeros(nome))
 			{
-				if (isdigit(nome[i])) temNumero = true;
+				cout << "O nome não deve conter números!" << endl;
 			}
-			if (!temNumero && nome.size() > 0) break;
-			cout << "[ERRO] O nome nao pode conter numeros." << endl;
-		}
-
-
-		while (true)
-		{
-			cout << "Digite o Email: ";
-			cin >> email;
-			size_t atPos = email.find('@');
-			size_t dotPos = email.find('.', atPos);
-			if (atPos != string::npos && atPos > 0 && dotPos != string::npos && dotPos < email.size() - 1) break;
-			cout << "[ERRO] Email invalido! Tente novamente." << endl;
-		}
-
-
-		while (true)
-		{
-			cout << "Telefone (DDD + Numero): ";
-			cin >> telefone;
-			string temp = "";
-			for(size_t i = 0; i < telefone.size(); i++)
+			else
 			{
-				if(isdigit(telefone[i])) temp += telefone[i];
-			}
-			if (temp.size() == 10 || temp.size() == 11)
-			{
-				telefone = temp;
 				break;
 			}
-			cout << "[ERRO] Digite 10 ou 11 numeros!" << endl;
 		}
 
 		while(true)
 		{
-			string entrada;
-			cout << "Digite a data de nascimento (DD/MM/AAAA): ";
-			cin >> entrada;
-
-
-			if (entrada.find('/') == string::npos)
+			cout << "Digite o Email:";
+			cin >> email;
+			if (isValidEmail(email))
 			{
-				cout << "[ERRO] Use o formato DD/MM/AAAA!" << endl;
+				break;
+			}
+
+			else
+			{
+				cout << "[ERRO] Email em formato invalido! Tente novamente." << endl;
+			}
+		}
+
+		while(true)
+		{
+			cout << "Digite o Telefone: ";
+			cin >> telefone;
+
+			bool soNumeros = true;
+			for(size_t i = 0; i < telefone.length(); i++)
+				if(!isdigit(telefone[i])) soNumeros = false;
+
+			if(!soNumeros)
+			{
+				cout << "[ERRO] Digite apenas numeros!" << endl;
+				continue;
+			}
+			if(telefone.length() < 10 || telefone.length() > 11)
+			{
+				cout << "[ERRO] Telefone precisa ter 10 ou 11 digitos!" << endl;
+				continue;
+			}
+			break;
+		}
+
+		while (true)
+		{
+			cout << "Digite o dia do nascimento: ";
+			if (!(cin >> x))  
+			{
+				cout << "[ERRO] Digite apenas numeros!" << endl;
+				cin.clear();
+				cin.ignore(1000, '\n');
 				continue;
 			}
 
-			char sep1, sep2;
-
-			stringstream ss(entrada);
-
-			if (ss >> x >> sep1 >> y >> sep2 >> z)
+			cout << "Digite o mes do nascimento: ";
+			if (!(cin >> y))
 			{
-				if (sep1 != '/' || sep2 != '/')
-				{
-					cout << "[ERRO] Use o formato DD/MM/AAAA!" << endl;
-					continue;
-				}
+				cout << "[ERRO] Digite apenas numeros!" << endl;
+				cin.clear();
+				cin.ignore(1000, '\n');
+				continue;
+			}
 
-				if (z < 1900 || z > 2026)
-				{
-					cout << "[ERRO] Ano invalido!" << endl;
-					continue;
-				}
+			cout << "Digite o ano do nascimento: ";
+			if (!(cin >> z))
+			{
+				cout << "[ERRO] Digite apenas numeros!" << endl;
+				cin.clear();
+				cin.ignore(1000, '\n');
+				continue;
+			}
 
-				if (y < 1 || y > 12)
-				{
-					cout << "[ERRO] Mes invalido!" << endl;
-					continue;
-				}
 
-				int diasNoMes[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+			if (z < 1900 || z > 2026)
+			{
+				cout << "[ERRO] Ano invalido (1900-2026)!" << endl;
+				continue;
+			}
 
-				if ((z % 4 == 0 && z % 100 != 0) || (z % 400 == 0))
-					diasNoMes[1] = 29;
+			if (y < 1 || y > 12)
+			{
+				cout << "[ERRO] Mes invalido (1-12)!" << endl;
+				continue;
+			}
 
-				if (x >= 1 && x <= diasNoMes[y - 1])
-					break;
 
-				cout << "[ERRO] Dia invalido para o mes informado!" << endl;
+			int diasNoMes[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+
+			if ((z % 4 == 0 && z % 100 != 0) || (z % 400 == 0))
+			{
+				diasNoMes[1] = 29;
+			}
+
+			if (x >= 1 && x <= diasNoMes[y - 1])
+			{
+		
+				break;
 			}
 			else
 			{
-				cout << "[ERRO] Formato invalido!" << endl;
+				cout << "[ERRO] Dia " << x << " invalido para o mes " << y << "!" << endl;
 			}
 		}
 
+		p.setNome(nome);
+		p.setEmail(email);
+		p.setTelefone(telefone);
+		p.SetDataNascimento(x, y, z);
+		p.CalcIdade(z);
 
-		Contato c(email, nome, telefone , x, y, z);
+		listaContatos.push_back(p);
+		pessoas++;
 
-		listaContatos.push_back(c);
-		contact++;
-		cout << "-----------------------" << endl;
-
-		cout << "Digite 1 para adicionar um novo contato ou 0 para terminar" << endl;
-		cin >> escolha;
-		if(escolha == 0)
+		if(pessoas < 2)
 		{
-			break;
+			cout << "Digite 1 para adicionar um novo contato ou 0 para terminar" << endl;
+			cin >> Escolha;
+
+			cin.ignore(1000, '\n');
+
+			if(Escolha == 5)
+			{
+				break;
+			}
+
 		}
 		system("cls");
+		Sleep(500);
 	}
 
 	system("cls");
 
 	cout << "\n======= SUA AGENDA =======" << endl;
 
-	for (int i = 0; i < listaContatos.size(); i++)
+	for(int i = 0; i < listaContatos.size(); i++)
 	{
+		listaContatos[i].Imprimir();
 		cout << "-----------------------" << endl;
-		listaContatos[i].imprimir(hoje);
 	}
 
 	return 0;
 }
+
+
+
+
