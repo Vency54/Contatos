@@ -215,7 +215,7 @@ int main()
 		{
 			cout << "Digite o Nome:";
 			cin >> nome;
-			
+
 			if(temNumeros(nome))
 			{
 				cout << "O nome não deve conter números!" << endl;
@@ -266,7 +266,7 @@ int main()
 		while (true)
 		{
 			cout << "Digite o dia do nascimento: ";
-			if (!(cin >> x))  
+			if (!(cin >> x))
 			{
 				cout << "[ERRO] Digite apenas numeros!" << endl;
 				cin.clear();
@@ -316,7 +316,7 @@ int main()
 
 			if (x >= 1 && x <= diasNoMes[y - 1])
 			{
-		
+
 				break;
 			}
 			else
@@ -334,8 +334,9 @@ int main()
 		listaContatos.push_back(p);
 		pessoas++;
 
-		if(pessoas < 5)
+		if(pessoas < 6)
 		{
+			cout << "==============================" << endl;
 			cout << "Digite 1 para adicionar um novo contato ou 0 para terminar" << endl;
 			cin >> Escolha;
 
