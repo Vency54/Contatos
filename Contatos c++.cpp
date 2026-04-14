@@ -88,9 +88,6 @@ private:
 	string Email;
 	string Nome;
 	string Telefone;
-	int dia;
-	int mes;
-	int ano;
 	Data dtnasc;
 
 	int idade;
@@ -139,11 +136,10 @@ public:
 		return dtnasc.getData();
 	}
 
-	void CalcIdade(int ano)
+	int Idade()
 	{
-		idade = 2026 - ano;
+		return 2026 - dtnasc.getAno();
 	}
-
 
 	void Imprimir()
 	{
@@ -154,7 +150,7 @@ public:
 			 << Telefone.substr(2, 5) << "-" << Telefone.substr(6, 4) << endl;
 
 		cout << "Data de Nascimento: " << dtnasc.getData() << endl;
-		cout << "Idade: " << idade << endl;
+		cout << "Idade: " << Idade() << endl;
 	}
 };
 
@@ -214,7 +210,7 @@ int main()
 		while(true)
 		{
 			cout << "Digite o Nome:";
-			cin >> nome;
+			getline(cin, nome);
 
 			if(temNumeros(nome))
 			{
@@ -329,7 +325,6 @@ int main()
 		p.setEmail(email);
 		p.setTelefone(telefone);
 		p.SetDataNascimento(x, y, z);
-		p.CalcIdade(z);
 
 		listaContatos.push_back(p);
 		pessoas++;
